@@ -19,7 +19,8 @@
 @implementation LTHViewController
 
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
 	CGSize winSize = [UIScreen mainScreen].bounds.size;
@@ -28,7 +29,7 @@
 																	150.0,
 																	40.0)];
 	
-	_monthYearPicker = [[LTHOptionPickerView alloc] initWithOptions:nil defaultOption:@"vienas" andToolbar:YES];
+	_monthYearPicker = [[LTHOptionPickerView alloc] initWithOptions:[NSArray arrayWithObjects:@"vienas",@"du",@"trys",@"keturi",@"penki",@"sesi",@"septyni",@"astuoni",@"devyni",@"desimt",nil] defaultOption:nil andToolbar:YES];
 	_monthYearPicker.delegate = self;
 	_dateTextField.delegate = self;
 	_dateTextField.textAlignment = NSTextAlignmentCenter;
@@ -43,28 +44,33 @@
 
 
 #pragma mark - LTHMonthYearPickerView Delegate
-- (void)pickerDidPressCancelWithInitialValues:(NSString *)initialValue {
+- (void)pickerDidPressCancelWithInitialValue:(NSString *)initialValue withPicker:(LTHOptionPickerView *)picker
+{
 	_dateTextField.text = initialValue;
     [_dateTextField resignFirstResponder];
 }
 
 
-- (void)pickerDidPressDoneWithOption:(NSString *)option {
+- (void)pickerDidPressDoneWithOption:(NSString *)option withPicker:(LTHOptionPickerView *)picker
+{
     _dateTextField.text = option;
 	[_dateTextField resignFirstResponder];
 }
 
 
-- (void)pickerDidPressCancel {
+- (void)pickerDidPressCancelwithPicker:(LTHOptionPickerView *)picker
+{
 	[_dateTextField resignFirstResponder];
 }
 
 
-- (void)pickerDidSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+- (void)pickerDidSelectRow:(NSInteger)row inComponent:(NSInteger)component withPicker:(LTHOptionPickerView *)picker
+{
 	NSLog(@"row: %i in component: %i", row, component);
 }
 
-- (void)pickerDidSelectOption:(NSString *)option {
+- (void)pickerDidSelectOption:(NSString *)option withPicker:(LTHOptionPickerView *)picker
+{
     _dateTextField.text = option;
 }
 

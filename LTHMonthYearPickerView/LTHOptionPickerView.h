@@ -5,18 +5,18 @@
 //  Created by Roland Leth on 30/11/13.
 //  Copyright (c) 2014 Roland Leth. All rights reserved.
 //
-
+@class LTHOptionPickerView;
 @protocol LTHOptionPickerViewDelegate <NSObject>
 @optional
-- (void)pickerDidSelectRow:(NSInteger)row inComponent:(NSInteger)component;
-- (void)pickerDidSelectOption:(NSString *)option;
-- (void)pickerDidPressDoneWithOption:(NSString *)option;
-- (void)pickerDidPressCancel;
+- (void)pickerDidSelectRow:(NSInteger)row inComponent:(NSInteger)component withPicker:(LTHOptionPickerView *)picker;
+- (void)pickerDidSelectOption:(NSString *)option withPicker:(LTHOptionPickerView *)picker;
+- (void)pickerDidPressDoneWithOption:(NSString *)option withPicker:(LTHOptionPickerView *)picker;
+- (void)pickerDidPressCancelwithPicker:(LTHOptionPickerView *)picker;
 /**
  @brief				  If you want to change your text field (and/or variables) dynamically by implementing any of the pickerDidSelect__ delegate methods, instead of doing the change when Done was pressed, you should implement this method too, so the Cancel button restores old values.
  @param initialValue
  */
-- (void)pickerDidPressCancelWithInitialValue:(NSString *)initialValue;
+- (void)pickerDidPressCancelWithInitialValue:(NSString *)initialValue withPicker:(LTHOptionPickerView *)picker;
 @end
 
 @interface LTHOptionPickerView : UIView <UIPickerViewDataSource, UIPickerViewDelegate>

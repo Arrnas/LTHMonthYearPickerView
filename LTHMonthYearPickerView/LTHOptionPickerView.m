@@ -29,14 +29,18 @@ const CGFloat kRowHeight = 30.0;
 
 #pragma mark - UIPickerViewDelegate
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+    if (_options.count <= _optionsIndex)
+    {
+        return;
+    }
     if (!_initialValue) _initialValue = [_options objectAtIndex:_optionsIndex];
     if (component == 0) {
         _optionsIndex = [_optionPicker selectedRowInComponent: 0];
-        if ([self.delegate respondsToSelector: @selector(pickerDidSelectOption:)])
-            [self.delegate pickerDidSelectOption: _options[_optionsIndex]];
+        if ([self.delegate respondsToSelector: @selector(pickerDidSelectOption:withPicker:)])
+            [self.delegate pickerDidSelectOption: _options[_optionsIndex] withPicker:self];
     }
-    if ([self.delegate respondsToSelector: @selector(pickerDidSelectRow:inComponent:)])
-        [self.delegate pickerDidSelectRow: row inComponent: component];
+    if ([self.delegate respondsToSelector: @selector(pickerDidSelectRow:inComponent:withPicker:)])
+        [self.delegate pickerDidSelectRow: row inComponent: component withPicker:self];
 //	[[NSNotificationCenter defaultCenter]
 //     postNotificationName: @"pickerDidSelectRow"
 //     object: self
@@ -100,8 +104,14 @@ const CGFloat kRowHeight = 30.0;
 
 #pragma mark - Actions
 - (void)_done {
-    if ([self.delegate respondsToSelector: @selector(pickerDidPressDoneWithOption:)])
-        [self.delegate pickerDidPressDoneWithOption:_options[_optionsIndex]];
+    if (_options.count <= _optionsIndex)
+    {
+        if ([self.delegate respondsToSelector: @selector(pickerDidPressDoneWithOption:withPicker:)])
+            [self.delegate pickerDidPressDoneWithOption:@"" withPicker:self];
+        return;
+    }
+    if ([self.delegate respondsToSelector: @selector(pickerDidPressDoneWithOption:withPicker:)])
+        [self.delegate pickerDidPressDoneWithOption:_options[_optionsIndex] withPicker:self];
 //	[[NSNotificationCenter defaultCenter]
 //     postNotificationName: @"pickerDidPressDone"
 //     object: self
@@ -112,15 +122,24 @@ const CGFloat kRowHeight = 30.0;
 
 
 - (void)_cancel {
+    if (_options.count <= _optionsIndex)
+    {
+        if ([self.delegate respondsToSelector: @selector(pickerDidPressCancelWithInitialValue:withPicker:)]) {
+            [self.delegate pickerDidPressCancelWithInitialValue: @"" withPicker:self];
+        }
+        else if ([self.delegate respondsToSelector: @selector(pickerDidPressCancelwithPicker:)])
+            [self.delegate pickerDidPressCancelwithPicker:self];
+        return;
+    }
     if (!_initialValue) _initialValue  =_options[_optionsIndex];
-    if ([self.delegate respondsToSelector: @selector(pickerDidPressCancelWithInitialValue:)]) {
-        [self.delegate pickerDidPressCancelWithInitialValue: _initialValue];
+    if ([self.delegate respondsToSelector: @selector(pickerDidPressCancelWithInitialValue:withPicker:)]) {
+        [self.delegate pickerDidPressCancelWithInitialValue: _initialValue withPicker:self];
         [self.optionPicker selectRow: [_options indexOfObject: _initialValue]
                        inComponent: 0
                           animated: NO];
     }
-    else if ([self.delegate respondsToSelector: @selector(pickerDidPressCancel)])
-        [self.delegate pickerDidPressCancel];
+    else if ([self.delegate respondsToSelector: @selector(pickerDidPressCancelwithPicker:)])
+        [self.delegate pickerDidPressCancelwithPicker:self];
 //	[[NSNotificationCenter defaultCenter]
 //     postNotificationName: @"pickerDidPressDone"
 //     object: self
@@ -146,13 +165,16 @@ const CGFloat kRowHeight = 30.0;
 }
 
 - (void)_sendFirstPickerValues {
-	if ([self.delegate respondsToSelector: @selector(pickerDidSelectRow:inComponent:)]) {
+	if ([self.delegate respondsToSelector: @selector(pickerDidSelectRow:inComponent:withPicker:)]) {
 		[self.delegate pickerDidSelectRow: [self.optionPicker selectedRowInComponent:0]
-							  inComponent: 0];
+							  inComponent: 0 withPicker:self];
 	}
-    if ([self.delegate respondsToSelector: @selector(pickerDidSelectOption:)])
-        [self.delegate pickerDidSelectOption:_options[_optionsIndex]];
-	_option = _options[_optionsIndex];
+    if ([self.delegate respondsToSelector: @selector(pickerDidSelectOption:withPicker:)])
+        [self.delegate pickerDidSelectOption:_options[_optionsIndex] withPicker:self];
+    if(_options.count > _optionsIndex)
+    {
+        _option = _options[_optionsIndex];
+    }
 }
 
 
