@@ -12,7 +12,7 @@
 @interface LTHViewController ()
 
 @property (nonatomic, strong) UITextField *dateTextField;
-@property (nonatomic, strong) LTHMonthYearPickerView *monthYearPicker;
+@property (nonatomic, strong) LTHOptionPickerView *monthYearPicker;
 @end
 
 
@@ -28,10 +28,7 @@
 																	150.0,
 																	40.0)];
 	
-	_monthYearPicker = [[LTHMonthYearPickerView alloc] initWithDate: [NSDate date]
-														shortMonths: NO
-													 numberedMonths: NO
-														 andToolbar: YES];
+	_monthYearPicker = [[LTHOptionPickerView alloc] initWithOptions:nil defaultOption:@"vienas" andToolbar:YES];
 	_monthYearPicker.delegate = self;
 	_dateTextField.delegate = self;
 	_dateTextField.textAlignment = NSTextAlignmentCenter;
@@ -46,17 +43,14 @@
 
 
 #pragma mark - LTHMonthYearPickerView Delegate
-- (void)pickerDidPressCancelWithInitialValues:(NSDictionary *)initialValues {
-	_dateTextField.text = [NSString stringWithFormat:
-						   @"%@ / %@",
-						   initialValues[@"month"],
-						   initialValues[@"year"]];
+- (void)pickerDidPressCancelWithInitialValues:(NSString *)initialValue {
+	_dateTextField.text = initialValue;
     [_dateTextField resignFirstResponder];
 }
 
 
-- (void)pickerDidPressDoneWithMonth:(NSString *)month andYear:(NSString *)year {
-    _dateTextField.text = [NSString stringWithFormat: @"%@ / %@", month, year];
+- (void)pickerDidPressDoneWithOption:(NSString *)option {
+    _dateTextField.text = option;
 	[_dateTextField resignFirstResponder];
 }
 
@@ -70,19 +64,8 @@
 	NSLog(@"row: %i in component: %i", row, component);
 }
 
-
-- (void)pickerDidSelectMonth:(NSString *)month {
-    NSLog(@"month: %@ ", month);
-}
-
-
-- (void)pickerDidSelectYear:(NSString *)year {
-    NSLog(@"year: %@ ", year);
-}
-
-
-- (void)pickerDidSelectMonth:(NSString *)month andYear:(NSString *)year {
-    _dateTextField.text = [NSString stringWithFormat: @"%@ / %@", month, year];
+- (void)pickerDidSelectOption:(NSString *)option {
+    _dateTextField.text = option;
 }
 
 

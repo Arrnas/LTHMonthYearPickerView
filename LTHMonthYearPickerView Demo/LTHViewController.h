@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LTHMonthYearPickerView.h"
+#import "LTHOptionPickerView.h"
 
-@interface LTHViewController : UIViewController <LTHMonthYearPickerViewDelegate, UITextFieldDelegate>
+@interface LTHViewController : UIViewController <LTHOptionPickerViewDelegate, UITextFieldDelegate>
 
 @end
